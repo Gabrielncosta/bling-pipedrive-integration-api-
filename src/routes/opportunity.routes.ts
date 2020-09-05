@@ -1,21 +1,10 @@
 import { Router } from 'express';
-import PipedriveService from '../services/PipedriveService';
-import BlingService from '../services/BlingService';
+
+import OpportunityController from '../controllers/OpportunityController';
 
 const opportunityRouter = Router();
+const opportunityController = new OpportunityController();
 
-opportunityRouter.get('/', async (request, response) => {
-  try {
-    const Pipedrive = new PipedriveService();
-    const Bling = new BlingService();
-
-    const wonDeals = await Pipedrive.execute();
-    const orders = await Bling.execute(wonDeals);
-
-    return response.json({ ok: true });
-  } catch (err) {
-    return response.status(400).json({ error: err.message });
-  }
-});
+opportunityRouter.get('/', opportunityController.create);
 
 export default opportunityRouter;
