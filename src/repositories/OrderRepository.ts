@@ -9,6 +9,12 @@ interface IOrder {
 }
 
 class OrderRepository {
+  public async index(): Promise<any> {
+    const orders = await Order.find({});
+
+    return orders;
+  }
+
   public async create({
     orderId,
     orderNumber,

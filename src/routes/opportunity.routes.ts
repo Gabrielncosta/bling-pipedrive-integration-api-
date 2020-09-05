@@ -6,5 +6,6 @@ const opportunityRouter = Router();
 const opportunityController = new OpportunityController();
 
 opportunityRouter.get('/', opportunityController.create);
+opportunityRouter.get('/opportunity', opportunityController.index);
 
 export default opportunityRouter;
