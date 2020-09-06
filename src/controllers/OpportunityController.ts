@@ -13,18 +13,19 @@ export default class OpportunityController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const Pipedrive = new PipedriveService();
-    const Bling = new BlingService();
-    const orderRepository = new OrderRepository();
+    try {
+      const Pipedrive = new PipedriveService();
+      const Bling = new BlingService();
 
-    const wonDeals = await Pipedrive.execute();
+      const wonDeals = await Pipedrive.execute();
 
-    const orders = await Bling.execute(wonDeals);
+      const orders = await Bling.execute(wonDeals);
 
-    orders.map(async order => {
-      await orderRepository.create(order);
-    });
+      console.log(orders);
 
-    return response.json({ ok: true });
+      return response.json(orders);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }

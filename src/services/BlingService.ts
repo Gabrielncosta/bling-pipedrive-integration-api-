@@ -1,12 +1,31 @@
 import { create } from 'xmlbuilder2';
 import api from '../config/blingApi';
+import OrderRepository from '../repositories/OrderRepository';
+
+export interface IPerson {
+  name: string;
+}
+export interface IDeal {
+  id: number;
+  title: string;
+  value: number;
+  products_count?: number;
+  user_id: number;
+  org_name?: string;
+  person_id: IPerson;
+}
+
+export interface IResponse {
+  numero: string;
+  idPedido: number;
+  codigos_rastreamento?: Array<string | number>;
+  volumes?: string | number;
+}
 
 class BlingService {
-  public async execute(wonDeals): Promise<any> {
-    const apikey =
-      'ee724884e72eb7f157e1a896b8a973c53eccd7b1daab490ff1cd1eb4af19e42e3310eb6d';
-
-    const blingOrders = await wonDeals.map(async wonDeal => {
+  public async execute(wonDeals: Array<IDeal>): Promise<Array<IResponse>> {
+    const orderRepository = new OrderRepository();
+    const blingOrders = wonDeals.map(async wonDeal => {
       const obj = {
         pedido: {
           cliente: {
@@ -15,6 +34,7 @@ class BlingService {
           itens: {
             item: {
               codigo: wonDeal.id,
+              // codigo: 749,
               descricao: wonDeal.title,
               qtde: wonDeal.products_count,
               vlr_unit: wonDeal.value,
@@ -30,26 +50,45 @@ class BlingService {
 
       xml = encodeURIComponent(xml);
 
-      const order = await api.post(`pedido/json/?apikey=${apikey}&xml=${xml}`);
+      const orderExists = await orderRepository.show(wonDeal.id);
+
+      if (orderExists) {
+        return;
+      }
+
+      const order = await api.post(
+        `pedido/json/?apikey=${process.env.API_KEY}&xml=${xml}`,
+      );
+
+      if (order.data.retorno.erros) {
+        return order.data.retorno.erros[0].erro.msg;
+      }
 
       const orderResponse = order.data.retorno.pedidos[0].pedido;
 
-      const formattedOrder = {
-        orderId: orderResponse.idPedido,
-        orderNumber: orderResponse.numero,
-        value: wonDeal.value,
-        orgName: wonDeal.org_name,
-        personName: wonDeal.person_id.name,
-      };
+      if (orderResponse) {
+        await orderRepository.create({
+          orderId: orderResponse.idPedido,
+          orderNumber: orderResponse.numero,
+          dealId: wonDeal.id,
+          value: wonDeal.value,
+          orgName: wonDeal.org_name,
+          personName: wonDeal.person_id.name,
+        });
+      }
 
-      return formattedOrder;
+      return orderResponse;
     });
 
-    const orders = Promise.all(blingOrders).then(orderPromise => {
+    const orders = await Promise.all(blingOrders).then(orderPromise => {
       return orderPromise;
     });
 
-    return orders;
+    const filteredOrders = orders.filter(order => {
+      return order !== undefined;
+    });
+
+    return filteredOrders;
   }
 }
 

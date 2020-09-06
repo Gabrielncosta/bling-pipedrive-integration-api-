@@ -1,6 +1,13 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-type Order = Document;
+export interface IOrderModel extends Document {
+  orderId: number;
+  orderNumber: string;
+  value: number;
+  dealId: number;
+  orgName?: string;
+  personName?: string;
+}
 
 const OrderSchema = new Schema(
   {
@@ -9,6 +16,10 @@ const OrderSchema = new Schema(
       required: true,
     },
     orderNumber: {
+      type: Number,
+      required: true,
+    },
+    dealId: {
       type: Number,
       required: true,
     },
@@ -30,4 +41,4 @@ const OrderSchema = new Schema(
   },
 );
 
-export default mongoose.model<Order>('Order', OrderSchema);
+export default mongoose.model<IOrderModel>('Order', OrderSchema);
