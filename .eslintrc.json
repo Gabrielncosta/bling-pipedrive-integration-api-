@@ -22,6 +22,7 @@
       "prettier/prettier": "error",
       "class-methods-use-this": "off",
       "camelcase": "off",
+      "consistent-return": "off",
       "import/extensions": [
         "error",
         "ignorePackages",
