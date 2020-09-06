@@ -1,6 +1,7 @@
 import { create } from 'xmlbuilder2';
 import api from '../config/blingApi';
 import OrderRepository from '../repositories/OrderRepository';
+import AppError from '../errors/AppError';
 
 export interface IPerson {
   name: string;
@@ -34,7 +35,6 @@ class BlingService {
           itens: {
             item: {
               codigo: wonDeal.id,
-              // codigo: 749,
               descricao: wonDeal.title,
               qtde: wonDeal.products_count,
               vlr_unit: wonDeal.value,
@@ -61,7 +61,7 @@ class BlingService {
       );
 
       if (order.data.retorno.erros) {
-        return order.data.retorno.erros[0].erro.msg;
+        throw new AppError(order.data.retorno.erros[0].erro.msg, 400);
       }
 
       const orderResponse = order.data.retorno.pedidos[0].pedido;
