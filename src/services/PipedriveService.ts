@@ -2,8 +2,21 @@ import api from '../config/pipedriveApi';
 
 import AppError from '../helpers/errors/AppError';
 
+export interface IPerson {
+  name: string;
+}
+export interface IDeal {
+  id: number;
+  title: string;
+  value: number;
+  products_count?: number;
+  user_id: number;
+  org_name?: string;
+  person_id: IPerson;
+}
+
 class PipedriveService {
-  public async execute(): Promise<Array<string>> {
+  public async execute(): Promise<Array<IDeal>> {
     const deals = await api.get('/deals', {
       params: {
         status: 'won',
