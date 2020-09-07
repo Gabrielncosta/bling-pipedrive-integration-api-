@@ -4,8 +4,6 @@ import PipedriveService from '../services/PipedriveService';
 import BlingService from '../services/BlingService';
 import OrderRepository from '../repositories/OrderRepository';
 
-import HttpResponse from '../helpers/protocols/HttpResponse';
-
 export default class OpportunityController {
   public async index(request: Request, response: Response): Promise<Response> {
     const orderRepository = new OrderRepository();
