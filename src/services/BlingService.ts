@@ -1,7 +1,7 @@
 import { create } from 'xmlbuilder2';
 import api from '../config/blingApi';
 import OrderRepository from '../repositories/OrderRepository';
-import AppError from '../helpers/errors/AppError';
+import AppError from '../errors/AppError';
 
 export interface IPerson {
   name: string;

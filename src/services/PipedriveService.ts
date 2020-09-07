@@ -1,6 +1,6 @@
 import api from '../config/pipedriveApi';
 
-import AppError from '../helpers/errors/AppError';
+import AppError from '../errors/AppError';
 
 export interface IPerson {
   name: string;
