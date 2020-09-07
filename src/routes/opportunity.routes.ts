@@ -3,9 +3,8 @@ import { Router } from 'express';
 import OpportunityController from '../controllers/OpportunityController';
 
 const opportunityRouter = Router();
-const opportunityController = new OpportunityController();
 
-opportunityRouter.get('/', opportunityController.create);
-opportunityRouter.get('/list', opportunityController.index);
+opportunityRouter.get('/', OpportunityController.create);
+opportunityRouter.get('/list', OpportunityController.index);
 
 export default opportunityRouter;

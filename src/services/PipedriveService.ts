@@ -37,4 +37,4 @@ class PipedriveService {
   }
 }
 
-export default PipedriveService;
+export default new PipedriveService();

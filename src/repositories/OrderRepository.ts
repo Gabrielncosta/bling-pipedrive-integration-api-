@@ -52,4 +52,4 @@ class OrderRepository {
   }
 }
 
-export default OrderRepository;
+export default new OrderRepository();

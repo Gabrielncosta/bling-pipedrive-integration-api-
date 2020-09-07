@@ -27,11 +27,11 @@ const OrderSchema = new Schema(
       type: Number,
       required: true,
     },
-    orgName: {
-      type: String,
-      required: false,
-    },
     personName: {
+      type: String,
+      required: true,
+    },
+    orgName: {
       type: String,
       required: false,
     },

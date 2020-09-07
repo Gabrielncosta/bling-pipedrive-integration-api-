@@ -25,7 +25,6 @@ export interface IResponse {
 
 class BlingService {
   public async execute(wonDeals: Array<IDeal>): Promise<Array<IResponse>> {
-    const orderRepository = new OrderRepository();
     const blingOrders = wonDeals.map(async wonDeal => {
       const obj = {
         pedido: {
@@ -50,7 +49,7 @@ class BlingService {
 
       xml = encodeURIComponent(xml);
 
-      const orderExists = await orderRepository.show(wonDeal.id);
+      const orderExists = await OrderRepository.show(wonDeal.id);
 
       if (orderExists) {
         return;
@@ -67,7 +66,7 @@ class BlingService {
       const orderResponse = order.data.retorno.pedidos[0].pedido;
 
       if (orderResponse) {
-        await orderRepository.create({
+        await OrderRepository.create({
           orderId: orderResponse.idPedido,
           orderNumber: orderResponse.numero,
           dealId: wonDeal.id,
@@ -96,4 +95,4 @@ class BlingService {
   }
 }
 
-export default BlingService;
+export default new BlingService();

@@ -4,22 +4,20 @@ import PipedriveService from '../services/PipedriveService';
 import BlingService from '../services/BlingService';
 import OrderRepository from '../repositories/OrderRepository';
 
-export default class OpportunityController {
+class OpportunityController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const orderRepository = new OrderRepository();
+    const orders = await OrderRepository.index();
 
-    const orders = await orderRepository.index();
     return response.json(orders);
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const Pipedrive = new PipedriveService();
-    const Bling = new BlingService();
+    const wonDeals = await PipedriveService.execute();
 
-    const wonDeals = await Pipedrive.execute();
-
-    const orders = await Bling.execute(wonDeals);
+    const orders = await BlingService.execute(wonDeals);
 
     return response.json(orders);
   }
 }
+
+export default new OpportunityController();
