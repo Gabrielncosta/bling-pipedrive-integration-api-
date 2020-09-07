@@ -1,12 +1,12 @@
 import api from '../config/pipedriveApi';
 
-import ServiceError from '../errors/ServiceError';
+import AppError from '../helpers/errors/AppError';
 
 class PipedriveService {
   public async execute(): Promise<Array<string>> {
     const deals = await api.get('/deals', {
       params: {
-        status: 'lost',
+        status: 'won',
         api_token: process.env.API_TOKEN,
       },
     });
@@ -14,7 +14,7 @@ class PipedriveService {
     const { data } = deals.data;
 
     if (!data) {
-      throw new ServiceError(
+      throw new AppError(
         'No deals with status won found on provided Pipedrive account',
         400,
       );

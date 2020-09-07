@@ -1,7 +1,7 @@
 import { create } from 'xmlbuilder2';
 import api from '../config/blingApi';
 import OrderRepository from '../repositories/OrderRepository';
-import AppError from '../errors/AppError';
+import AppError from '../helpers/errors/AppError';
 
 export interface IPerson {
   name: string;
@@ -87,6 +87,10 @@ class BlingService {
     const filteredOrders = orders.filter(order => {
       return order !== undefined;
     });
+
+    if (filteredOrders.length === 0) {
+      throw new AppError('No new deals to insert', 400);
+    }
 
     return filteredOrders;
   }
