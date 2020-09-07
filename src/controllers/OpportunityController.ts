@@ -4,6 +4,8 @@ import PipedriveService from '../services/PipedriveService';
 import BlingService from '../services/BlingService';
 import OrderRepository from '../repositories/OrderRepository';
 
+import HttpResponse from '../helpers/protocols/HttpResponse';
+
 export default class OpportunityController {
   public async index(request: Request, response: Response): Promise<Response> {
     const orderRepository = new OrderRepository();
@@ -13,19 +15,13 @@ export default class OpportunityController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    try {
-      const Pipedrive = new PipedriveService();
-      const Bling = new BlingService();
+    const Pipedrive = new PipedriveService();
+    const Bling = new BlingService();
 
-      const wonDeals = await Pipedrive.execute();
+    const wonDeals = await Pipedrive.execute();
 
-      const orders = await Bling.execute(wonDeals);
+    const orders = await Bling.execute(wonDeals);
 
-      console.log(orders);
-
-      return response.json(orders);
-    } catch (error) {
-      throw new Error(error);
-    }
+    return response.json(orders);
   }
 }
